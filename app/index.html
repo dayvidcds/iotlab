@@ -8,27 +8,31 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://getbootstrap.com/docs/4.0/examples/sticky-footer-navbar/sticky-footer-navbar.css">
 
-    <title>IoTizando - Home</title>
+    <title>IoTLab - Home</title>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/">OrientTool</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="/">IoTLab</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/device">Device panel</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/device">Device panel</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
 
-    <div class="container">
+    <!-- Begin page content -->
+    <main role="main" class="container">
         <p>
             <h3>Information about device:</h3>
         </p>
@@ -52,22 +56,20 @@
 
         <div id="pInformation1" hidden="true" class="container col-sm-4">
             <div id="pInformation" hidden="true">
-                <!-- <div class="card" style="width: 18rem;">
-                <div class="card-body">
-                    <h5 class="card-title" id="pTitle">Card title</h5>
-                    <p class="card-text" id="pStartDate">Start date:</p>
-                    <p class="card-text" id="pDevice">Device:</p>
-                    <p class="card-text" id="pRoute">Route:</p>
-                    <a href="/device" class="card-link">Update</a>
-                </div>
-            </div>-->
+
             </div>
             <p>
                 <h5>Log</h5>
                 <textarea id="pTextLog" class="form-control" rows="8"></textarea>
             </p>
         </div>
-    </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <span class="text-muted">Developed by dayvidcds.</span>
+        </div>
+    </footer>
 
 
     <!-- Optional JavaScript -->

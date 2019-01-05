@@ -1,8 +1,6 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const path = require('path')
-const sys = require('sys');
-const net = require('net');
 const mqtt = require('mqtt')
 
 const DeviceRepository = require('./api/DeviceRepository')
@@ -124,18 +122,6 @@ const mongoConnection = require('./api/ConnectionDB').then((connection) => {
             if (resp.token === req.body.token) {
                 let htmlCode = ''
                 if (resp.device === 1) {
-                    /* htmlCode = `
-                     <div class="card" style="width: 18rem;">
-                         <div class="card-body">
-                             <h5 class="card-title" id="pTitle">${'Led status: Off'}</h5>    
-                             <h5 class="card-title" id="pTitle">${'Device: ' + resp.name}</h5>
-                             <p class="card-text" id="pStartDate">${'Start date: ' + resp.start_date}</p>
-                             <p class="card-text" id="pDevice">${'Type: ' + 'Led'}</p>
-                             <p class="card-text" id="pTopic">${'Topic: ' + resp.topic}</p>
-                             <a href="/device" class="card-link">Update</a>
-                         </div>
-                     </div>
-                     `*/
                     htmlCode = `
                     
                     <!-- Card -->
