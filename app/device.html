@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <title>IoTizando - Panel</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/">OrientTool</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Device panel</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <p>
+            <h3>Device</h3>
+        </p>
+        <div class="row">
+            <div class="col-md-12 col-md-offset-3">
+                <button type="button" id="btnAdd" class="btn btn-primary">Add device</button>
+                <button type="button" id="btnUp" class="btn btn-secondary">Update device</button>
+                <button type="button" id="btnFind" class="btn btn-info">Find all Devices</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div id="divAdd">
+            <p>
+                <div class="form-group">
+                    <label>Device name</label>
+                    <input type="text" class="form-control" id="pAddName" placeholder="Enter identification">
+                </div>
+                <div class="form-group">
+                    <label>Device</label>
+                    <select class="form-control" id="pAddDevice">
+                            <option value="1">Led</option>
+                            <option value="2">Button</option>
+                          </select>
+                </div>
+                <div class="form-group">
+                    <label>Topic</label>
+                    <div class="row">
+                        <div class="col">
+                            <select class="form-control" id="pAddTopic">
+                            </select>
+                        </div>
+                        <div class="col-md-auto">
+                            <button class="btn btn-alert" onclick="showModal2()">New topic</button>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-success" id="pAddCreateDevice">Create</button>
+            </p>
+        </div>
+
+        <div id="divUp" hidden="true">
+            <p>
+                <div class="form-group">
+                    <label>Device ID</label>
+                    <input type="text" class="form-control" id="pUpId" placeholder="Enter identification">
+                </div>
+                <div class="form-group">
+                    <label>Device token</label>
+                    <input type="text" class="form-control" id="pUpToken" placeholder="Enter identification">
+                </div>
+                <button type="submit" class="btn btn-success" id="pUpCreateDevice">Submit</button>
+            </p>
+        </div>
+
+        <div id="divCards" hidden="true">
+            <p>
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">Card title</h5>
+                        <p class="card-text">Start date:</p>
+                        <p class="card-text">Type:</p>
+                        <a href="#" class="card-link">Update</a>
+                    </div>
+                </div>
+            </p>
+        </div>
+
+        <p>
+            <div class="alert alert-danger" role="alert" hidden="true" id="pAlert">
+                Information does not match!
+            </div>
+        </p>
+
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="modal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Save this information</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="goToHomePage()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+                </div>
+                <div class="modal-body">
+                    <p id="modalToken"></p>
+                    <p id="modalId"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="goToHomePage()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="modal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Route of topic:</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="goToHomePage()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control" id="pNewTopicRoute" placeholder="Enter route of topic">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="insertItemSelectTopic()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        $(document).ready(() => {
+            $.get('/findTopics', (data) => {
+                if (data.status === 'ok') {
+                    console.log(data.msg)
+                    for (let i = 0; i < data.msg.length; i++) {
+                        $('#pAddTopic').append(`
+                            <option>${data.msg[i]._id.topic}</option>
+                        `)
+                    }
+                }
+            })
+        })
+
+        function showModal2() {
+            $('#modal2').modal('show')
+        }
+
+        function insertItemSelectTopic() {
+            $('#pAddTopic').append(`<option>${$('#pNewTopicRoute').val()}</option>`)
+        }
+
+        $('#btnAdd').click(() => {
+            $('#divAdd').attr('hidden', false)
+            $('#divUp').attr('hidden', true)
+            $('#divCards').attr('hidden', true)
+            $('#pAlert').attr('hidden', true)
+        })
+
+        $('#btnUp').click(() => {
+            $('#divUp').attr('hidden', false)
+            $('#divAdd').attr('hidden', true)
+            $('#divCards').attr('hidden', true)
+            $('#pAlert').attr('hidden', true)
+        })
+
+        $('#btnFind').click(() => {
+            $('#divCards').attr('hidden', false)
+            $('#divUp').attr('hidden', true)
+            $('#divAdd').attr('hidden', true)
+            $('#pAlert').attr('hidden', true)
+        })
+
+        function showUpDevice() {
+            $('#divUp').attr('hidden', false)
+            $('#divAdd').attr('hidden', true)
+            $('#divCards').attr('hidden', true)
+            $('#pAlert').attr('hidden', true)
+        }
+
+        $('#pAddCreateDevice').click(() => {
+            $.post('/insert/device', {
+                name: $('#pAddName').val(),
+                device: $('#pAddDevice').val(),
+                topic: $('#pAddTopic').val()
+            }, (data) => {
+                if (data.status === 'ok') {
+
+                    $('#modalToken').text('Token: ' + data.token)
+                    $('#modalId').text('Device_id: ' + data.id)
+
+                    $('#pAlert').text(data.msg)
+                    $('#pAlert').attr('class', 'alert alert-success')
+                    $('#pAlert').attr('hidden', false)
+
+                    $('#modal1').modal('show')
+                } else {
+                    $('#pAlert').text(data.msg)
+                    $('#pAlert').attr('class', 'alert alert-danger')
+                    $('#pAlert').attr('hidden', false)
+                }
+            })
+        })
+
+        function goToHomePage() {
+            $(location).attr('href', '/')
+        }
+    </script>
+</body>
+
+</html>

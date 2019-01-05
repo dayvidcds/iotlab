@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <title>IoTizando - Home</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/">OrientTool</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/device">Device panel</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <p>
+            <h3>Information about device:</h3>
+        </p>
+        <div id="pDatas">
+            <div class="form-group">
+                <label for="exampleInputEmail1">Device ID</label>
+                <input type="text" class="form-control" id="inputId" placeholder="Enter identification">
+                <small id="emailHelp" class="form-text text-muted">if you do not remember, little penny...</small>
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Token</label>
+                <input type="text" class="form-control" id="inputToken" placeholder="Enter token">
+            </div>
+            <button type="submit" class="btn btn-primary" id="btnSub">Submit</button>
+            <p>
+                <div class="alert alert-danger" role="alert" id="pAlert" hidden="true">
+                    Information does not match!
+                </div>
+            </p>
+        </div>
+
+        <div id="pInformation1" hidden="true" class="container col-sm-4">
+            <div id="pInformation" hidden="true">
+                <!-- <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title" id="pTitle">Card title</h5>
+                    <p class="card-text" id="pStartDate">Start date:</p>
+                    <p class="card-text" id="pDevice">Device:</p>
+                    <p class="card-text" id="pRoute">Route:</p>
+                    <a href="/device" class="card-link">Update</a>
+                </div>
+            </div>-->
+            </div>
+            <p>
+                <h5>Log</h5>
+                <textarea id="pTextLog" class="form-control" rows="8"></textarea>
+            </p>
+        </div>
+    </div>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
+
+    <script type="text/javascript">
+        $('#btnSub').click(() => {
+            $.post('/getInformation', {
+                id: $('#inputId').val(),
+                token: $('#inputToken').val()
+            }, (data) => {
+                if (data.status === 'ok') {
+                    //$('#pTitle').text(data.msg.name)
+                    //$('#pStartDate').text('Start date: ' + data.msg.name)
+                    //$('#pDevice')..('Device: ' + data.msg.device)
+                    //$('#pRoute').text('Route: ' + data.msg.route)
+                    $('#pInformation').html(data.html)
+                    $('#pInformation').attr('hidden', false)
+                    $('#pInformation1').attr('hidden', false)
+                    $('#pDatas').attr('hidden', true)
+
+                    $(function() {
+
+                        const socket = new io.connect('http://191.179.215.37:5000')
+
+                        socket.on('connect', function() {
+                            socket.on('mqtt', function(msg) {
+                                if (msg.topic !== data.msg.topic) {
+                                    return
+                                } else {
+                                    $('#pTextLog').text($('#pTextLog').text() + '\n' + msg.topic + ' => ' + msg.payload)
+                                    if (msg.payload == "On") {
+                                        $('#pTitle').text('Status: On')
+                                        $('#pImgLed').attr('src', '/img/led.png')
+                                    }
+                                    if (msg.payload == "Off") {
+                                        $('#pTitle').text('Status: Off')
+                                        $('#pImgLed').attr('src', '/img/ledApagado.png')
+                                    }
+                                }
+                            })
+                            $('#pTextLog').text('Subscribe topic => ' + data.msg.topic)
+                            socket.emit('subscribe', {
+                                topic: data.msg.topic
+                            })
+                        })
+                    })
+
+
+                } else {
+                    $('#pAlert').text(data.msg)
+                    $('#pAlert').attr('class', 'alert alert-danger')
+                    $('#pAlert').attr('hidden', false)
+                    $('#pDatas').attr('hidden', false)
+                    setTimeout(() => {
+                        $('#pAlert').attr('hidden', true)
+                    }, 3000)
+                }
+            })
+        })
+
+        function sendMsg(param) {
+            console.log('Sending..: ' + param.id.toString())
+            $(function() {
+                const socket = new io.connect('http://191.179.215.37:5000')
+                socket.emit('publish', {
+                    topic: param.name.toString(),
+                    payload: param.id.toString()
+                })
+            })
+        }
+    </script>
+
+</body>
+
+</html>
