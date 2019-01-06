@@ -4,9 +4,6 @@ const path = require('path')
 const mqtt = require('mqtt')
 
 const port = process.env.PORT || 3000
-const address = process.env.ADDRESS
-
-console.log(address)
 
 const DeviceRepository = require('./api/DeviceRepository')
 
@@ -14,7 +11,7 @@ const app = express()
 
 const DIR = path.join(__dirname, './app')
 
-const io = require('socket.io').listen(port)
+const io = require('socket.io').listen(5000)
 
 let client = mqtt.connect('mqtt://localhost')
 
