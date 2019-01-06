@@ -50,7 +50,6 @@ class DeviceRepository {
     findTopics() {
         return new Promise((resolve, reject) => {
             this.deviceModel.aggregate([{ $group: { _id: { topic: '$topic' } } }], (err, res) => {
-                console.log(res)
                 if (err || res == null) {
                     reject(err)
                 }

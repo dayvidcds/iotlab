@@ -102,7 +102,7 @@
 
             <p>
                 <div class="alert alert-danger" role="alert" hidden="true" id="pAlert">
-                    Information does not match!
+
                 </div>
             </p>
 
@@ -164,7 +164,7 @@
 
     <script type="text/javascript">
         $(document).ready(() => {
-            $.get('/findTopics', (data) => {
+            $.get('/api/device/findTopics', (data) => {
                 if (data.status === 'ok') {
                     console.log(data.msg)
                     for (let i = 0; i < data.msg.length; i++) {
@@ -213,7 +213,7 @@
         }
 
         $('#pAddCreateDevice').click(() => {
-            $.post('/insert/device', {
+            $.post('/api/device/insert', {
                 name: $('#pAddName').val(),
                 device: $('#pAddDevice').val(),
                 topic: $('#pAddTopic').val()
