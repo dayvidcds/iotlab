@@ -4,6 +4,9 @@ const path = require('path')
 const mqtt = require('mqtt')
 
 const port = process.env.PORT || 3000
+const address = process.env.ADDRESS
+
+console.log(address)
 
 const DeviceRepository = require('./api/DeviceRepository')
 
@@ -11,9 +14,9 @@ const app = express()
 
 const DIR = path.join(__dirname, './app')
 
-const io = require('socket.io').listen(5000);
+const io = require('socket.io').listen(port)
 
-const client = mqtt.connect('mqtt://192.168.0.19')
+let client = mqtt.connect('mqtt://localhost')
 
 io.sockets.on('connection', function(socket) {
     // socket connection indicates what mqtt topic to subscribe to in data.topic
@@ -216,7 +219,11 @@ const mongoConnection = require('./api/ConnectionDB').then((connection) => {
         })
     })
 
-    app.listen(port, () => {
+    app.listen(port, (err, res) => {
+        if (err) {
+            console.log('Server Connection ERROR')
+            return
+        }
         console.log('Servidor rodando na porta ' + port)
     })
 })
