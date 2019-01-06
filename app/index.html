@@ -95,7 +95,7 @@
 
                     $(function() {
 
-                        const socket = new io.connect('http://191.179.215.37:5000')
+                        const socket = new io.connect('https://iotlabplatform.herokuapp.com')
 
                         socket.on('connect', function() {
                             socket.on('mqtt', function(msg) {
