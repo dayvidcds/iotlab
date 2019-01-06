@@ -3,6 +3,8 @@ const bodyParser = require('body-parser')
 const path = require('path')
 const mqtt = require('mqtt')
 
+const port = process.env.PORT || 3000
+
 const DeviceRepository = require('./api/DeviceRepository')
 
 const app = express()
@@ -214,7 +216,7 @@ const mongoConnection = require('./api/ConnectionDB').then((connection) => {
         })
     })
 
-    app.listen(3000, () => {
-        console.log('Servidor rodando na porta 3000')
+    app.listen(port, () => {
+        console.log('Servidor rodando na porta ' + port)
     })
 })
