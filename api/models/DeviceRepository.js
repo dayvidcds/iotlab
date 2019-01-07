@@ -8,7 +8,9 @@ class DeviceRepository {
             device: { type: Number, required: true }, // Se é atuador ou sensor
             start_date: { type: Date, required: true }, // Data que começou a trabalhar
             token: { type: String, required: true }, // Segurança para o device
-            topic: { type: String, required: true } // Rota MQTT
+            topic: { type: String, required: true }, // Rota MQTT
+            is_public: { type: Boolean, required: true },
+            user_id: { type: String, required: false }
         })
         this.deviceModel = this.connection.model('Device', this.schema)
     }

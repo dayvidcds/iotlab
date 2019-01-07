@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://getbootstrap.com/docs/4.0/examples/sticky-footer-navbar/sticky-footer-navbar.css">
+
+    <title>IoTLab - Home</title>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="/">IoTLab</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/device">Device panel</a>
+                    </li>
+                </ul>
+                <button onclick="(function(){$(location).attr('href', '/login')})()" class="btn btn-outline-success my-2 my-sm-0" type="submit">User panel</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Begin page content -->
+    <main role="main" class="container col-md-4 col-md-offset-3">
+        <div id="pLogin" style="width: 350px;">
+            <h3>Login</h3>
+            <div class="form-group">
+                <label for="exampleInputEmail1">Username</label>
+                <input type="text" class="form-control" id="pUserName" placeholder="Enter your username">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Password</label>
+                <input type="password" class="form-control" id="pPassword" placeholder="Enter your password">
+            </div>
+            <button type="submit" class="btn btn-primary" id="btnSub">Submit</button>
+            <hr>
+            <div class="form-group">
+                <label><small><a href="/signup">Sign up here!</a></small></label>
+            </div>
+            <p>
+                <div class="alert alert-danger" role="alert" id="pAlert" hidden="true">
+
+                </div>
+            </p>
+        </div>
+    </main><br><br>
+
+    <footer class="footer">
+        <div class="container">
+            <span class="text-muted">Developed by dayvidcds.</span>
+        </div>
+    </footer>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        $('#btnSub').click(() => {
+            console.log('Clicou')
+            $.post('/api/user/login', {
+                username: $('#pUserName').val(),
+                password: $('#pPassword').val(),
+            }, (data) => {
+                if (data.status === 'ok') {
+                    $(location).attr('href', '/dashboard')
+                } else {
+                    $('#pAlert').attr('class', 'alert alert-danger')
+                    $('#pAlert').attr('hidden', false)
+                    $('#pAlert').text(data.msg)
+                    console.log(data.msg)
+                }
+            })
+        })
+    </script>
+
+</body>
+
+</html>

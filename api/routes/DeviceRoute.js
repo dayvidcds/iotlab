@@ -16,6 +16,7 @@ class DeviceRoute {
     }
 
     initializeRoutes() {
+
         router.post('/insert', (req, res) => {
             this.controller.insert(req.body.name, req.body.topic, req.body.device).then((resp) => {
                 res.json(resp)
@@ -23,8 +24,17 @@ class DeviceRoute {
                 res.json(resp)
             })
         })
+
         router.get('/findTopics', (req, res) => {
             this.controller.findTopics().then((resp) => {
+                res.json(resp)
+            }).catch((resp) => {
+                res.json(resp)
+            })
+        })
+
+        router.post('/getInformation', (req, res) => {
+            this.controller.getInformation(req.body.id, req.body.token).then((resp) => {
                 res.json(resp)
             }).catch((resp) => {
                 res.json(resp)

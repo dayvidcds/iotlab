@@ -9,35 +9,35 @@ const DeviceRepository = require('./api/models/DeviceRepository')
 const DeviceController = require('./api/controllers/DeviceController')
 const DeviceRoute = require('./api/routes/DeviceRoute')
 
+const UserRepository = require('./api/models/UserRepository')
+const UserController = require('./api/controllers/UserController')
+const UserRoute = require('./api/routes/UserRouter')
+
 const DIR = path.join(__dirname, './app')
 
 const io = require('socket.io').listen(5000)
 
 let client = mqtt.connect('mqtt://localhost')
 
-io.sockets.on('connection', function(socket) {
-    // socket connection indicates what mqtt topic to subscribe to in data.topic
-    socket.on('subscribe', function(data) {
-            console.log('Subscribing to ' + data.topic)
-            socket.join(data.topic)
-            client.subscribe(data.topic, (err) => {
-                if (!err) {
-                    console.log('Inscrito no topico => ', data.topic)
-                } else {
-                    console.log('Erro ao tentar se inscrever no topico => ', data.topic)
-                }
-            })
+io.sockets.on('connection', (socket) => {
+    socket.on('subscribe', (data) => {
+        console.log('Subscribing to ' + data.topic)
+        socket.join(data.topic)
+        client.subscribe(data.topic, (err) => {
+            if (!err) {
+                console.log('Inscrito no topico => ', data.topic)
+            } else {
+                console.log('Erro ao tentar se inscrever no topico => ', data.topic)
+            }
         })
-        // when socket connection publishes a message, forward that message
-        // the the mqtt broker
-    socket.on('publish', function(data) {
+    })
+    socket.on('publish', (data) => {
         console.log('Publishing to ' + data.topic)
         client.publish(data.topic, data.payload)
     })
 })
 
-client.on('message', function(topic, payload, packet) {
-    // message is Buffer
+client.on('message', (topic, payload, packet) => {
     console.log('MSG MQTT => ', payload.toString())
     io.sockets.emit('mqtt', { 'topic': topic.toString(), 'payload': payload.toString() })
 })
@@ -48,14 +48,20 @@ const mongoConnection = require('./api/models/ConnectionDB').then((connection) =
 
     const devRepo = new DeviceRepository(connection)
     const devControl = new DeviceController(devRepo)
-    const devRouter = new DeviceRoute(devControl)
+    const devRoute = new DeviceRoute(devControl)
+
+    const userRepo = new UserRepository(connection)
+    const userControl = new UserController(userRepo)
+    const userRoute = new UserRoute(userControl)
 
     app.use('/img', express.static(DIR + '/img'))
 
     app.use(bodyParser.urlencoded({ extended: true }))
     app.use(bodyParser.json())
+    app.use(cookieParser())
 
-    app.use('/api/device', devRouter.router)
+    app.use('/api/device', devRoute.router)
+    app.use('/api/user', userRoute.router)
 
     app.get('/', (req, res) => {
         res.sendFile(DIR + '/index.html')
@@ -65,93 +71,47 @@ const mongoConnection = require('./api/models/ConnectionDB').then((connection) =
         res.sendFile(DIR + '/device.html')
     })
 
-    app.get('/findTopics', (req, res) => {
-        devRepo.findTopics().then((resp) => {
-            res.json({
-                status: 'ok',
-                msg: resp
-            })
-        }).catch((resp) => {
-            res.json({
-                status: 'error',
-                msg: 'No items'
-            })
-        })
+    app.get('/login', (req, res) => {
+        res.sendFile(DIR + '/user-login.html')
     })
 
-    app.post('/getInformation', (req, res) => {
-        if (req.body.id === '' || req.body.token === '') {
-            return res.json({
-                status: 'error',
-                msg: 'Complete all fields'
-            })
-        }
-        devRepo.findById(req.body.id).then((resp) => {
-            if (resp.token === req.body.token) {
-                let htmlCode = ''
-                if (resp.device === 1) {
-                    htmlCode = `
-                    
-                    <!-- Card -->
-                    <div class="card">
-                    
-                      <!-- Card image -->
-                      <img class="card-img-top" id="pImgLed" src="/img/ledApagado.png" alt="Card image cap">
-                    
-                      <!-- Card content -->
-                      <div class="card-body">
-                    
-                        <!-- Title -->
-                        <h5 class="card-title" >${'Device: ' + resp.name}</h5>
-                        <span class="card-text" id="pDevice">${'Type: ' + 'Led'}</span><br>
-                        <span class="card-text" id="pTitle">${'Status: ' + 'Off'}</span><br>
-                        <span class="card-text" id="pTopic">${'Topic: ' + resp.topic}</span><br><br>
-                        <a href="/device" class="btn btn-primary btn-sm">Update</a>
-                        <a href="#" class="btn btn-secondary btn-sm">Source code for NODEMCU</a>
-                    
-                      </div>
-                    
-                    </div>
-                    <!-- Card -->
+    app.get('/signup', (req, res) => {
+        res.sendFile(DIR + '/user-signup.html')
+    })
 
-                    `
-
-
-                }
-                if (resp.device === 2) {
-                    htmlCode = `
-                    <div class="card" style="width: 18rem;">
-                        <div class="card-body">
-                            <center>
-                                <button type="submit" class="btn btn-primary" name="${resp.topic}" id="On" onclick="sendMsg(this)">On</button>
-                                <button type="submit" class="btn btn-primary" name="${resp.topic}" id="Off" onclick="sendMsg(this)">Off</button>
-                            </center>
-                            <h5 class="card-title" id="pTitleBtn">${'Device: ' + resp.name}</h5>
-                            <p class="card-text" id="pStartDateBtn">${'Start date: ' + resp.start_date}</p>
-                            <p class="card-text" id="pDeviceBtn">${'Type: ' + 'Button'}</p>
-                            <p class="card-text" id="pTopicBtn">${'topic: ' + resp.topic}</p>
-                            <a href="/device" class="card-link">Update</a>
-                        </div>
-                    </div>
-                    `
-                }
-                res.json({
-                    status: 'ok',
-                    msg: resp,
-                    html: htmlCode
+    app.use((req, res, next) => {
+        try {
+            const cookie = req.cookies.userCookie
+            console.log(cookie)
+            if (cookie !== undefined) {
+                const token = cookie.token
+                const jwtSecret = 'SECRET'
+                jwt.verify(token, jwtSecret, (err, decoded) => {
+                    if (err) {
+                        res.cookie('userCookie', {
+                            token: null,
+                            user: null
+                        })
+                        res.redirect('/login')
+                    } else {
+                        req.decoded = decoded
+                        next()
+                    }
                 })
             } else {
-                res.json({
-                    status: 'error',
-                    msg: 'Token is not valid'
+                res.cookie('userCookie', {
+                    token: null,
+                    user: null
                 })
+                res.redirect('/login')
             }
-        }).catch((resp) => {
-            res.json({
-                status: 'error',
-                msg: 'Id not found'
-            })
-        })
+        } catch (Error) {
+            res.redirect('/login')
+        }
+    })
+
+    app.get('/dashboard', (req, res) => {
+        res.sendFile(DIR + '/user-dash.html')
     })
 
     app.get('/findByTopic/:topic', (req, res) => {

@@ -1,14 +1,6 @@
 // LIBRARYS
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
-#include <SPI.h>
-#include <MFRC522.h>
-
-#define SS_PIN 4  //D2
-#define RST_PIN 5 //D1
-MFRC522 mfrc522(SS_PIN, RST_PIN);   // Create MFRC522 instance.
-
-MFRC522::MIFARE_Key key;
 
 // VARIABLES
 const char* SSID = "DIREITO PROCESSUAL CIVIL"; // rede wifi
