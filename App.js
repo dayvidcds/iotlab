@@ -72,7 +72,18 @@ const mongoConnection = require('./api/models/ConnectionDB').then((connection) =
     })
 
     app.get('/login', (req, res) => {
-        res.sendFile(DIR + '/user-login.html')
+        const cookie = req.cookies.userCookie
+        if (cookie == undefined) {
+            res.cookie('userCookie', {
+                token: null,
+                user: null
+            })
+            res.sendFile(DIR + '/user-login.html')
+        } else if (cookie.token == null) {
+            res.sendFile(DIR + '/user-login.html')
+        } else {
+            res.redirect('/dashboard')
+        }
     })
 
     app.get('/signup', (req, res) => {

@@ -36,6 +36,7 @@ class UserRouter {
                 res.json(resp)
             })
         })
+
         router.post('/login', (req, res) => {
             this.controller.login(req.body.username, req.body.password).then((resp) => {
                 const jwtSecret = 'SECRET'
