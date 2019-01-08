@@ -46,7 +46,8 @@ class UserRouter {
                 res.cookie('userCookie', {
                     token: token,
                     user: {
-                        username: resp.user
+                        username: resp.user,
+                        id: resp.id
                     }
                 })
                 res.json({

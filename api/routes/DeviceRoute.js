@@ -25,6 +25,15 @@ class DeviceRoute {
             })
         })
 
+        router.post('/insertForUser', (req, res) => {
+            const userId = req.cookies.userCookie.user.id
+            this.controller.insertForUser(req.body.name, req.body.topic, req.body.device, userId).then((resp) => {
+                res.json(resp)
+            }).catch((resp) => {
+                res.json(resp)
+            })
+        })
+
         router.get('/findTopics', (req, res) => {
             this.controller.findTopics().then((resp) => {
                 res.json(resp)

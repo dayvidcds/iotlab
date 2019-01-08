@@ -35,6 +35,11 @@
     <!-- Begin page content -->
     <main role="main" class="container">
         <H4 id="pUsername">teste</H4>
+        <div class="row">
+            <div class="col-md-12 col-md-offset-3">
+                <button type="button" id="btnAdd" class="btn btn-primary btn-sm">Add new device</button>
+            </div>
+        </div>
     </main><br><br>
 
     <footer class="footer">
@@ -42,6 +47,78 @@
             <span class="text-muted">Developed by dayvidcds.</span>
         </div>
     </footer>
+
+    <!-- Modal -->
+    <div class="modal fade" id="modalAddDevice" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Add new device</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Device name</label>
+                        <input type="text" class="form-control" id="pAddName" placeholder="Enter identification">
+                    </div>
+                    <div class="form-group">
+                        <label>Device</label>
+                        <select class="form-control" id="pAddDevice">
+                            <option value="1">Led</option>
+                            <option value="2">Button</option>
+                          </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Topic</label>
+                        <div class="row">
+                            <div class="col">
+                                <select class="form-control" id="pAddTopic">
+                            </select>
+                            </div>
+                            <div class="col-md-auto">
+                                <button class="btn btn-alert" onclick="showModal2()">New topic</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group form-check">
+                        <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                        <label class="form-check-label" for="exampleCheck1">Set to public</label>
+                    </div>
+                    <p>
+                        <div class="alert alert-danger" hidden="true" role="alert" id="pAlertModal">
+                            jhagdiisjk
+                        </div>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" id="btnSaveDevice" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="modal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Route of topic:</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control" id="pNewTopicRoute" placeholder="Enter route of topic">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="insertItemSelectTopic()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <!-- Optional JavaScript -->
@@ -74,6 +151,41 @@
                 }
             })
         })
+
+        $('#btnSaveDevice').click(() => {
+            $.post('/api/device/insertForUser', {
+                name: $('#pAddName').val(),
+                device: $('#pAddDevice').val(),
+                topic: $('#pAddTopic').val()
+            }, (data) => {
+                if (data.status === 'ok') {
+                    $('#pAlertModal').text(data.msg)
+                    $('#pAlertModal').attr('class', 'alert alert-success')
+                    $('#pAlertModal').attr('hidden', false)
+                    setTimeout(() => {
+                        $(location).attr('href', '/login')
+                    }, 2000)
+                } else {
+                    console.log(data)
+                    $('#pAlertModal').text(data.msg)
+                    $('#pAlertModal').attr('class', 'alert alert-danger')
+                    $('#pAlertModal').attr('hidden', false)
+                        //$(location).attr('href', '/login')
+                }
+            })
+        })
+
+        $('#btnAdd').click(() => {
+            $('#modalAddDevice').modal('show')
+        })
+
+        function showModal2() {
+            $('#modal2').modal('show')
+        }
+
+        function insertItemSelectTopic() {
+            $('#pAddTopic').append(`<option>${$('#pNewTopicRoute').val()}</option>`)
+        }
     </script>
 
 </body>

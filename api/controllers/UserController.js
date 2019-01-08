@@ -68,7 +68,8 @@ class UserController {
                     if (foi === true) {
                         resolve({
                             status: 'ok',
-                            user: resp.username
+                            user: resp.username,
+                            id: resp._id
                         })
                     } else {
                         reject({

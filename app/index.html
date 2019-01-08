@@ -96,7 +96,7 @@
 
                     $(function() {
 
-                        const socket = new io.connect('192.168.0.19:5000')
+                        const socket = new io.connect('192.168.0.20:5000')
 
                         socket.on('connect', function() {
                             socket.on('mqtt', function(msg) {
@@ -137,7 +137,7 @@
         function sendMsg(param) {
             console.log('Sending..: ' + param.id.toString())
             $(function() {
-                const socket = new io.connect('http://191.179.215.37:5000')
+                const socket = new io.connect('192.168.0.20:5000')
                 socket.emit('publish', {
                     topic: param.name.toString(),
                     payload: param.id.toString()

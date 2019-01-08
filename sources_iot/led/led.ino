@@ -3,14 +3,14 @@
 #include <PubSubClient.h>
 
 // VARIABLES
-const char* SSID = "DIREITO PROCESSUAL CIVIL"; // rede wifi
-const char* PASSWORD = "cervejagelada"; // senha da rede wifi
+const char* SSID = "DEO LANCAMENTOS (2.4Ghz)"; // rede wifi
+const char* PASSWORD = "orientdeo2018"; // senha da rede wifi
 
-const char* BROKER_MQTT = "191.179.215.37"; // ip/host do broker
+const char* BROKER_MQTT = "192.168.0.20"; // ip/host do broker
 int BROKER_PORT = 1883; // porta do broker
 
-const char* TOPIC_PING = "btnStatus";
-const char* TOPIC_PONG = "btnStatus";
+const char* TOPIC_PING = "tony";
+const char* TOPIC_PONG = "tony";
 
 // PROTOTYPES
 void initPins();
@@ -102,12 +102,6 @@ void recconectWiFi() {
 
 void enviar() {
   //Aguarda cartao
-  while (!mfrc522.PICC_IsNewCardPresent()) {
-    delay(100);
-  }
-  if (!mfrc522.PICC_ReadCardSerial()) {
-    return;
-  }
 
   char PAYLOAD[128];
 
@@ -115,9 +109,5 @@ void enviar() {
 
   MQTT.publish(TOPIC_PING, PAYLOAD);
  
-  // Halt PICC
-  mfrc522.PICC_HaltA();
-  // Stop encryption on PCD
-  mfrc522.PCD_StopCrypto1();
   delay(1000);
 }
