@@ -174,7 +174,7 @@ class DeviceController {
     }
 
     getInformation(deviceId, deviceToken) {
-        console.log('CHEGOII')
+        //console.log('CHEGOII')
         return new Promise((resolve, reject) => {
             if (deviceId === '' || deviceToken === '') {
                 reject({
@@ -215,17 +215,19 @@ class DeviceController {
                     if (resp.device === 2) {
                         htmlCode = `
                     <div class="card" style="width: 18rem;">
-                        <div class="card-body">
-                            <center>
-                                <button type="submit" class="btn btn-primary" name="${resp.topic}" id="On" onclick="sendMsg(this)">On</button>
-                                <button type="submit" class="btn btn-primary" name="${resp.topic}" id="Off" onclick="sendMsg(this)">Off</button>
-                            </center>
-                            <h5 class="card-title" id="pTitleBtn">${'Device: ' + resp.name}</h5>
-                            <p class="card-text" id="pStartDateBtn">${'Start date: ' + resp.start_date}</p>
-                            <p class="card-text" id="pDeviceBtn">${'Type: ' + 'Button'}</p>
-                            <p class="card-text" id="pTopicBtn">${'topic: ' + resp.topic}</p>
-                            <a href="/device" class="card-link">Update</a>
-                        </div>
+                    <div class="card-body">
+                    <center>
+                        <button type="submit" class="btn btn-primary" name="${resp.topic}" id="On" onclick="sendMsg(this)">On</button>
+                        <button type="submit" class="btn btn-primary" name="${resp.topic}" id="Off" onclick="sendMsg(this)">Off</button>
+                    </center>
+                    <br><br>
+                    <h5 class="card-title" id="pTitleBtn">${'Device: ' + resp.name}</h5>
+                    <span class="card-text" id="pDeviceBtn">${'Type: ' + 'Button'}</span><br>
+                    <span class="card-text" id="pStatusBtn">${'Status: ' + '-'}</span><br>
+                    <span class="card-text" id="pTopicBtn">${'Topic: ' + resp.topic}</span><br><br>
+                    <a href="/device" class="btn btn-primary btn-sm">Update</a>
+                    <a href="#" class="btn btn-secondary btn-sm">NODEMCU code</a>
+                </div>
                     </div>
                     `
                     }
@@ -241,6 +243,7 @@ class DeviceController {
                     })
                 }
             }).catch((resp) => {
+                console.log(resp)
                 reject({
                     status: 'error',
                     msg: 'Id not found'

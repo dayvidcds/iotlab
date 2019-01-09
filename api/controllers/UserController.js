@@ -53,13 +53,13 @@ class UserController {
                 if (username === '' || password === '') {
                     reject({
                         status: 'error',
-                        msg: 'Email ou senha não inseridos!'
+                        msg: 'Email or password not entered!'
                     })
                 }
                 if (password.length < 6) {
                     reject({
                         status: 'error',
-                        msg: 'Senha deve possuir pelo menos 6 caracteres!'
+                        msg: 'Password must be at least 6 characters long!'
                     })
                 }
                 this.repository.findByUsername(username).then((resp) => {
@@ -74,13 +74,13 @@ class UserController {
                     } else {
                         reject({
                             status: 'error',
-                            msg: 'Senha incorreta!'
+                            msg: 'Wrong password'
                         })
                     }
                 }).catch((resp) => {
                     reject({
                         status: 'error',
-                        msg: 'Usuário não cadastrado'
+                        msg: 'User not found'
                     })
                 })
             })

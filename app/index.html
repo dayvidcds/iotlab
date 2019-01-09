@@ -80,6 +80,7 @@
 
     <script type="text/javascript">
         $('#btnSub').click(() => {
+            console.log($('#inputId').val())
             $.post('/api/device/getInformation', {
                 id: $('#inputId').val(),
                 token: $('#inputToken').val()
