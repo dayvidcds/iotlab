@@ -102,7 +102,7 @@ class UserRouter {
 
         router.get('/getInformation', (req, res) => {
             const username = req.cookies.userCookie.user.username
-            console.log(username)
+                // console.log(username)
             this.controller.getInformation(username).then((resp) => {
                 res.json(resp)
             }).catch((resp) => {

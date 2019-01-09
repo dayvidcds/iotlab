@@ -38,6 +38,17 @@ class DeviceRepository {
         })
     }
 
+    findByUserId(userId) {
+        return new Promise((resolve, reject) => {
+            this.deviceModel.aggregate([{ $match: { user_id: userId } }], (err, res) => {
+                if (err || res == '') {
+                    reject(err)
+                }
+                resolve(res)
+            })
+        })
+    }
+
     findByName(name) {
         return new Promise((resolve, reject) => {
             this.deviceModel.findOne({ name: { $eq: name } }, (err, res) => {

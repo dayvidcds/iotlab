@@ -93,7 +93,7 @@ const mongoConnection = require('./api/models/ConnectionDB').then((connection) =
     app.use((req, res, next) => {
         try {
             const cookie = req.cookies.userCookie
-            console.log(cookie)
+                //console.log(cookie)
             if (cookie !== undefined) {
                 const token = cookie.token
                 const jwtSecret = 'SECRET'

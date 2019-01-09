@@ -27,7 +27,17 @@ class DeviceRoute {
 
         router.post('/insertForUser', (req, res) => {
             const userId = req.cookies.userCookie.user.id
-            this.controller.insertForUser(req.body.name, req.body.topic, req.body.device, userId).then((resp) => {
+            this.controller.insertForUser(req.body.name, req.body.topic, req.body.device, userId, req.body.ispublic).then((resp) => {
+                res.json(resp)
+            }).catch((resp) => {
+                res.json(resp)
+            })
+        })
+
+        router.get('/findByUserId', (req, res) => {
+            const userId = req.cookies.userCookie.user.id
+            this.controller.findByUserId(userId).then((resp) => {
+                //console.log('USERRR ITENSS =>  ', resp)
                 res.json(resp)
             }).catch((resp) => {
                 res.json(resp)

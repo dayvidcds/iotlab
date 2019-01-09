@@ -44,7 +44,7 @@ class DeviceController {
         })
     }
 
-    insertForUser(name, topic, device, userId) {
+    insertForUser(name, topic, device, userId, ispublic) {
         return new Promise((resolve, reject) => {
             if (name === '' || topic === '') {
                 reject({
@@ -65,7 +65,7 @@ class DeviceController {
                         token: 'ABCD', //Math.random().toString(36).substring(0, 16),
                         start_date: new Date(),
                         user_id: userId,
-                        is_public: true
+                        is_public: ispublic
                     }
                     this.repository.insert(objDevice).then((resp) => {
                         resolve({
@@ -82,6 +82,78 @@ class DeviceController {
                     })
                 })
             }
+        })
+    }
+
+    findByUserId(userId) {
+        return new Promise((resolve, reject) => {
+            this.repository.findByUserId(userId).then((resp) => {
+                let htmlCode = ''
+                console.log(resp)
+                for (let i = 0; i < resp.length; i++) {
+                    if (resp[i].device === 1) {
+                        htmlCode += `
+                    
+                    <!-- Card -->
+                    <div class="col-sm">
+                    <div class="card" style="width: 250px;">
+                    
+                      <!-- Card image -->
+                      <center><img class="card-img-top" id="pImgLed" src="/img/ledApagado.png" style="width:128px;" alt="Card image cap" ></center>
+                    
+                      <!-- Card content -->
+                      <div class="card-body">
+                    
+                        <!-- Title -->
+                        <h5 class="card-title" >${'Device: ' + resp[i].name}</h5>
+                        <span class="card-text" id="pDevice">${'Type: ' + 'Led'}</span><br>
+                        <span class="card-text" id="pTitle">${'Status: ' + 'Off'}</span><br>
+                        <span class="card-text" id="pTopic">${'Topic: ' + resp[i].topic}</span><br><br>
+                        <a href="/device" class="btn btn-primary btn-sm">Update</a>
+                        <a href="#" class="btn btn-secondary btn-sm">NODEMCU code</a>
+                    
+                      </div>
+                    
+                    </div>
+                    </div>
+                    <!-- Card -->
+    
+                    `
+                    }
+                    if (resp[i].device === 2) {
+                        htmlCode += `
+                        <div class="col-sm">
+                    <div class="card" style="width: 250px;">
+                        <div class="card-body">
+                            <center>
+                                <button type="submit" class="btn btn-primary" name="${resp[i].topic}" id="On" onclick="sendMsg(this)">On</button>
+                                <button type="submit" class="btn btn-primary" name="${resp[i].topic}" id="Off" onclick="sendMsg(this)">Off</button>
+                            </center>
+                            <br><br>
+                            <h5 class="card-title" id="pTitleBtn">${'Device: ' + resp[i].name}</h5>
+                            <span class="card-text" id="pDeviceBtn">${'Type: ' + 'Button'}</span><br>
+                            <span class="card-text" id="pStatusBtn">${'Status: ' + '-'}</span><br>
+                            <span class="card-text" id="pTopicBtn">${'Topic: ' + resp[i].topic}</span><br><br>
+                            <a href="/device" class="btn btn-primary btn-sm">Update</a>
+                            <a href="#" class="btn btn-secondary btn-sm">NODEMCU code</a>
+                        </div>
+                    </div>
+                    </div>
+                    `
+                    }
+                }
+                resolve({
+                    status: 'ok',
+                    msg: resp,
+                    html: htmlCode
+                })
+            }).catch((resp) => {
+                reject({
+                    status: 'error',
+                    msg: 'Devices not found',
+                    resp: resp
+                })
+            })
         })
     }
 

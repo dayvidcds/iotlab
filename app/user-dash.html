@@ -40,7 +40,14 @@
                 <button type="button" id="btnAdd" class="btn btn-primary btn-sm">Add new device</button>
             </div>
         </div>
-    </main><br><br>
+    </main>
+
+    <div class="container">
+        <div id="pInformation" hidden="true" class="row">
+
+        </div>
+    </div>
+    <br><br>
 
     <footer class="footer">
         <div class="container">
@@ -83,7 +90,7 @@
                         </div>
                     </div>
                     <div class="form-group form-check">
-                        <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                        <input type="checkbox" id="pSetPublic" class="form-check-input" id="exampleCheck1">
                         <label class="form-check-label" for="exampleCheck1">Set to public</label>
                     </div>
                     <p>
@@ -140,6 +147,26 @@
 
             })
 
+            $.get('/api/device/findTopics', (data) => {
+                if (data.status === 'ok') {
+                    for (let i = 0; i < data.msg.length; i++) {
+                        $('#pAddTopic').append(`
+                            <option>${data.msg[i]._id.topic}</option>
+                        `)
+                    }
+                }
+            })
+
+            $.get('/api/device/findByUserId', (data) => {
+                if (data.status === 'ok') {
+                    console.log(data)
+                    $('#pInformation').html(data.html)
+                    $('#pInformation').attr('hidden', false)
+                } else {
+                    console.log(data)
+                }
+            })
+
         })
 
         $('#btnLogOut').click(() => {
@@ -156,7 +183,8 @@
             $.post('/api/device/insertForUser', {
                 name: $('#pAddName').val(),
                 device: $('#pAddDevice').val(),
-                topic: $('#pAddTopic').val()
+                topic: $('#pAddTopic').val(),
+                ispublic: $('#pSetPublic').prop('checked')
             }, (data) => {
                 if (data.status === 'ok') {
                     $('#pAlertModal').text(data.msg)

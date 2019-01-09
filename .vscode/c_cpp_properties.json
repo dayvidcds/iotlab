@@ -6,7 +6,17 @@
                 "C:\\Users\\dayvi\\AppData\\Local\\Arduino15\\packages\\esp8266\\tools\\**",
                 "C:\\Users\\dayvi\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.4.2\\**"
             ],
-            "forcedInclude": []
+            "forcedInclude": [],
+            "intelliSenseMode": "msvc-x64",
+            "browse": {
+                "path": [
+                    "C:\\Users\\dayvi\\AppData\\Local\\Arduino15\\packages\\esp8266\\tools\\**",
+                    "C:\\Users\\dayvi\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.4.2\\**"
+                ]
+            },
+            "cStandard": "c11",
+            "cppStandard": "c++17"
         }
-    ]
+    ],
+    "version": 3
 }
