@@ -15,11 +15,34 @@ const UserRoute = require('./api/routes/UserRouter')
 
 const DIR = path.join(__dirname, './app')
 
-const io = require('socket.io').listen(5000)
+const app = require('express')();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
 
-let client = mqtt.connect('mqtt://localhost')
+const mosca = require('mosca')
 
-io.sockets.on('connection', (socket) => {
+const settings = {
+		port:1883
+	};
+
+const serverMosca = new mosca.Server(settings);
+
+serverMosca.on('ready', function() {
+    console.log("BROKER MQTT ready");
+});
+
+
+let client = mqtt.connect('mqtt://localhost', { port: 1883 })
+
+io.on('connect', () => {
+    console.log('Socket connected!');
+})
+
+io.on('error', () => {
+    console.log('Socket ERROR!');
+})
+
+io.on('connection', (socket) => {
     socket.on('subscribe', (data) => {
         console.log('Subscribing to ' + data.topic)
         socket.join(data.topic)
@@ -33,16 +56,32 @@ io.sockets.on('connection', (socket) => {
     })
     socket.on('publish', (data) => {
         console.log('Publishing to ' + data.topic)
+        //io.sockets.emit('mqtt', { 'topic': data.topic.toString(), 'payload': data.payload.toString() })
         client.publish(data.topic, data.payload)
     })
 })
 
+client.on('connect', function () {
+    console.log('Conectado ao MQTT')
+});
+
+client.on('error', function(err){
+    console.log("ERROR no MQTT => ", error)
+    client.end()
+});
+
 client.on('message', (topic, payload, packet) => {
     console.log('MSG MQTT => ', payload.toString())
-    io.sockets.emit('mqtt', { 'topic': topic.toString(), 'payload': payload.toString() })
-})
+    io.emit('mqtt', { 'topic': topic.toString(), 'payload': payload.toString() })
+});
 
-const app = express()
+client.on('offline', function() {
+    console.log("MQTT offline");
+});
+
+client.on('reconnect', function() {
+    console.log("MQTT reconnect");
+});
 
 const mongoConnection = require('./api/models/ConnectionDB').then((connection) => {
 
@@ -156,4 +195,4 @@ const mongoConnection = require('./api/models/ConnectionDB').then((connection) =
     console.log('ERROR >> Mongo connnection', resp)
 })
 
-module.exports = app
+module.exports = server;

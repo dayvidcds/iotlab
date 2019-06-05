@@ -6,11 +6,11 @@
 const char* SSID = "DEO LANCAMENTOS (2.4Ghz)"; // rede wifi
 const char* PASSWORD = "orientdeo2018"; // senha da rede wifi
 
-const char* BROKER_MQTT = "192.168.0.20"; // ip/host do broker
+const char* BROKER_MQTT = "192.168.0.16"; // ip/host do broker
 int BROKER_PORT = 1883; // porta do broker
 
-const char* TOPIC_PING = "tony";
-const char* TOPIC_PONG = "tony";
+const char* TOPIC_PING = "teste";
+const char* TOPIC_PONG = "teste";
 
 // PROTOTYPES
 void initPins();
@@ -70,10 +70,10 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
   }
   Serial.println("Tópico => " + String(topic) + " | Valor => " + String(message));
   if (String(message) == "On") {
-    digitalWrite(2, LOW);
+    digitalWrite(2, HIGH);
   }
   else {
-    digitalWrite(2, HIGH);
+    digitalWrite(2, LOW);
   }
   Serial.flush();
 }

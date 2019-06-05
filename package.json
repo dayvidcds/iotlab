@@ -2,10 +2,10 @@
     "name": "iotlab",
     "version": "1.0.0",
     "description": "",
-    "main": "Server.js",
+    "main": "./Server.js",
     "scripts": {
-        "test": "node Server.js",
-        "start": "node Server.js"
+        "test": "node ./Server.js",
+        "start": "node ./Server.js"
     },
     "author": "dayvidcds",
     "license": "ISC",
@@ -14,8 +14,10 @@
         "body-parse": "0.1.0",
         "cookie-parser": "1.4.3",
         "express": "4.16.4",
+        "http": "0.0.0",
         "jsonwebtoken": "8.4.0",
         "mongoose": "5.4.2",
+        "mosca": "^2.8.3",
         "mqtt": "2.18.8",
         "path": "0.12.7",
         "socket.io": "2.2.0"

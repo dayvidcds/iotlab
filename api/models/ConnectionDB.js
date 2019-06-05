@@ -6,7 +6,7 @@ mongoose.Promise = global.Promise;
 
 (() => {
     let error = ''
-    const url = 'mongodb://localhost:27017/iotlab' //'mongodb://dayvidcds:dayvidupe12344223@ds249824.mlab.com:49824/iotlab'
+    const url = 'mongodb://dayvidcds:dayvidupe12344223@ds249824.mlab.com:49824/iotlab' //'mongodb://localhost:27017/iotlab' //
     mongoConn = mongoose.connect(url, (err) => {
         if (err) {
             error = err

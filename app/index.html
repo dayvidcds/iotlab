@@ -79,6 +79,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
 
     <script type="text/javascript">
+
+        const HOST = 'http://192.168.0.16';
+
         $('#btnSub').click(() => {
             console.log($('#inputId').val())
             $.post('/api/device/getInformation', {
@@ -93,19 +96,21 @@
 
                     $(function() {
 
-                        const socket = new io.connect('http://191.179.215.37:5000')
+                        const socket = new io.connect(HOST);
 
                         socket.on('connect', function() {
                             socket.on('mqtt', function(msg) {
+                                console.log('MQTT')
                                 if (msg.topic !== data.msg.topic) {
+                                    console.log('RETURN')
                                     return
                                 } else {
                                     $('#pTextLog').text($('#pTextLog').text() + '\n' + msg.topic + ' => ' + msg.payload)
-                                    if (msg.payload == "On") {
+                                    if (msg.payload === "On") {
                                         $('#pTitle').text('Status: On')
                                         $('#pImgLed').attr('src', '/img/led.png')
                                     }
-                                    if (msg.payload == "Off") {
+                                    if (msg.payload === "Off") {
                                         $('#pTitle').text('Status: Off')
                                         $('#pImgLed').attr('src', '/img/ledApagado.png')
                                     }
@@ -134,7 +139,7 @@
         function sendMsg(param) {
             console.log('Sending..: ' + param.id.toString())
             $(function() {
-                const socket = new io.connect('http://191.179.215.37:5000')
+                const socket = new io.connect(HOST);
                 socket.emit('publish', {
                     topic: param.name.toString(),
                     payload: param.id.toString()
